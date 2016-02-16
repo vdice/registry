@@ -1,3 +1,7 @@
+# makeup-managed:begin
+include makeup.mk
+# makeup-managed:end
+
 include includes.mk
 
 # Short name: Short name, following [a-zA-Z_], used all over the place.
@@ -5,18 +9,11 @@ include includes.mk
 # - Docker image name
 # - Kubernetes service, rc, pod, secret, volume names
 SHORT_NAME := registry
-
-VERSION ?= git-$(shell git rev-parse --short HEAD)
-
-# Legacy support for DEV_REGISTRY, plus new support for DEIS_REGISTRY.
-DEIS_REGISTRY ?= ${DEV_REGISTRY}
-
-IMAGE_PREFIX ?= deis
+include ${MAKEUP_DIR}/makeup-bag-deis/versioning.mk
 
 # Kubernetes-specific information for RC, Service, and Image.
 RC := contrib/kubernetes/manifests/${SHORT_NAME}-rc.yaml
 SVC := contrib/kubernetes/manifests/${SHORT_NAME}-service.yaml
-IMAGE := ${DEIS_REGISTRY}${IMAGE_PREFIX}/${SHORT_NAME}:${VERSION}
 
 all:
 	@echo "Use a Makefile to control top-level building of the project."
